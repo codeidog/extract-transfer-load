@@ -14,7 +14,6 @@ db_user = os.environ['DB_USER']
 db_pwd = os.environ['DB_PWD']
 db_string = f'postgresql://{db_user}:{db_pwd}@{db_server}/{db_name}'
 engine = create_engine(db_string)
-create_tables(engine=engine)
 app = Flask(__name__)
 req_count = 0
 
@@ -25,7 +24,7 @@ def sendfiles():
     if(req_count >= 4):
         return {'Messge':'Max number of allowed request exceeded please wait a while'}, 401
     req_count+=1
-    app.logger.debug('Parsing list of files')
+    app.logger.debug(f'Parsing list of files. {req_count} requests')
     body = request.get_json(force=True) 
     corrupted_files = []    
     messgae = ''
@@ -34,10 +33,10 @@ def sendfiles():
     session = create_session(engine=engine) #Connect to the database
     try:
         for key,value in body["files"].items():
-            if(value is False):                
+            if(value is True):                
                 app.logger.warn(f'File {key} is corrupted and will not be loaded to the database')
                 corrupted_files.append(key)
-            elif(value is True):
+            elif(value is False):
                 app.logger.debug(f'File {key}. Adding it to the database')
                 file = File(name=key)            
                 session.add(file)
@@ -83,10 +82,11 @@ def heartbeat():
 if __name__ == '__main__':
     #Parse commandline args
     app.logger.setLevel(logging.DEBUG)
-    app.run()    
+    app.run(host='0.0.0.0', port=9091, debug=True)    
 
 #Production use from Gunicorn
 if __name__ != '__main__':
+    create_tables(engine=engine)
     gunicorn_logger = logging.getLogger('gunicorn.error')
     app.logger.handlers = gunicorn_logger.handlers
-    app.logger.setLevel(gunicorn_logger.level)    
+    app.logger.setLevel(gunicorn_logger.level)

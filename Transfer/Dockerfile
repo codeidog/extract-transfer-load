@@ -14,5 +14,6 @@ COPY bin /opt/transfer
 WORKDIR /opt/transfer
 
 EXPOSE 8081
-#--access-logfile -
-ENTRYPOINT gunicorn --bind "0.0.0.0:8081" --log-level=$LOG_LEVEL --access-logfile - 'transfer:app'
+#Wait for DB sever to start and then start the web server
+ENTRYPOINT python3 dbtest.py && \
+          gunicorn --bind "0.0.0.0:8081" --log-level=$LOG_LEVEL --access-logfile - 'transfer:app'

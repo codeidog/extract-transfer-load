@@ -17,7 +17,7 @@ services:
         image: 'transfer:1'
         env_file: 'env.env'
         environment: 
-            - LOG_LEVEL=DEBUG
+            - LOG_LEVEL=INFO
         ports:
             - 8081:8081            
         depends_on:
@@ -29,17 +29,14 @@ services:
             retries: 3
             start_period: 10s  
 
-    
-    #ui:
-    #    build:
-    #        context: ./WebUI
-    #        dockerfile: Dockerfile
-    #    image: 'detectorui:1'
-    #    env_file: 'minidetector.env'
-    #    environment:
-    #        - DB_SERVER=db            
-    #    depends_on:
-    #        - db
-    #    ports: 
-    #        - 80:8080
-    #    command: "--debug"
+    loader:
+        build:
+            context: ./Loader
+            dockerfile: Dockerfile
+        image: 'loader:1'        
+        environment:
+            - SERVER_URL=http://transfer:8081/sendfiles
+            - LOG_LEVEL=INFO        
+        depends_on:
+            - transfer        
+

@@ -1,0 +1,7 @@
+{
+    "MaxNumberOfFiles": 25,
+    "MaxFileCharCount":5,
+    "MaxNumberOfParallelRequests":5,
+    "CorruptionRate":10,
+    "Timeout":40    
+}
