@@ -19,8 +19,8 @@ Simple postgres database - nothing special
   The JSON will have a dictinary named files who's value is another dictionary where the key is the file and the value is whether the file is corrupted or not (true - corruted, false - not corrupted)  
 
   ### Loader
-  * Stress tool to generate a lot of fake data and send it to the server.
-  * config JSON:  
+* Stress tool to generate a lot of fake data and send it to the server.
+* config JSON:  
   ```JSON
   {
     "MaxNumberOfFiles": 25,
@@ -28,7 +28,8 @@ Simple postgres database - nothing special
     "MaxNumberOfParallelRequests":5,
     "CorruptionRate":10,
     "Timeout":40    
-}```      
+  }
+  ```
 1. MaxNumberOfFiles - the maximum number of files to send in each request. That number is randomly generated   
 2.  MaxFileCharCount - Max number of characters in the e file
 3. MaxNumberOfParallelRequests - Number of process that will send the requests.
